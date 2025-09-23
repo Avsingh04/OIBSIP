@@ -1,0 +1,64 @@
+ nmap --version
+Nmap version 7.95 ( https://nmap.org )
+Platform: i686-pc-windows-windows
+Compiled with: nmap-liblua-5.4.6 openssl-3.0.13 nmap-libssh2-1.11.0 nmap-libz-1.3.1 nmap-libpcre2-10.43 Npcap-1.80 nmap-libdnet-1.12 ipv6
+Compiled without:
+Available nsock engines: iocp poll select
+PS C:\Users\aryav> Ipconfig
+
+Windows IP Configuration
+
+
+Wireless LAN adapter Local Area Connection* 1:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Wireless LAN adapter Local Area Connection* 2:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Wireless LAN adapter Wi-Fi:
+
+   Connection-specific DNS Suffix  . :
+   IPv6 Address. . . . . . . . . . . : 2405:204:302b:769b:fda8:868:877:f46c
+   Temporary IPv6 Address. . . . . . : 2405:204:302b:769b:50d:d4d3:bdd0:d5ce
+   Link-local IPv6 Address . . . . . : fe80::e240:ec84:23c6:94a%12
+   IPv4 Address. . . . . . . . . . . : 10.136.64.232
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : fe80::8836:72ff:feab:9409%12
+                                       10.136.64.25
+
+Ethernet adapter Bluetooth Network Connection:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+PS C:\Users\aryav> nmap 10.136.64.232
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-22 06:36 India Standard Time
+Nmap scan report for 10.136.64.232
+Host is up (0.0036s latency).
+Not shown: 995 closed tcp ports (reset)
+PORT     STATE SERVICE
+135/tcp  open  msrpc
+139/tcp  open  netbios-ssn
+445/tcp  open  microsoft-ds
+2869/tcp open  icslap
+3306/tcp open  mysql
+
+Nmap done: 1 IP address (1 host up) scanned in 0.53 seconds
+PS C:\Users\aryav> nmap -sV  10.136.64.232
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-22 06:37 India Standard Time
+Nmap scan report for 10.136.64.232
+Host is up (0.00044s latency).
+Not shown: 995 closed tcp ports (reset)
+PORT     STATE SERVICE       VERSION
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp  open  microsoft-ds?
+2869/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+3306/tcp open  mysql         MySQL (unauthorized)
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 13.18 seconds
