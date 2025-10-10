@@ -1,0 +1,88 @@
+# Nmap 7.94 scan initiated Sat Oct 12 2025 01:45:23 as: nmap -A -T4 192.168.1.0/24
+# NOTE: review and verify service/OS identifications with targeted version scan and NSE scripts:
+#   nmap -sV --version-all -p <ports> --script=vuln,smb-vuln* 192.168.1.X
+#   Use authenticated/controlled scans for deeper checks.
+
+Nmap scan report for 192.168.1.1
+Host is up (0.0040s latency).
+Not shown: 996 closed ports
+PORT     STATE SERVICE     VERSION
+53/tcp   open  domain      dnsmasq 2.80
+80/tcp   open  http        lighttpd 1.4.55
+443/tcp  open  ssl/https?
+8080/tcp open  http-proxy  MikroTik RouterOS http config
+MAC Address: 58:A2:B5:3C:77:29 (MikroTik)
+Device type: router
+Running: MikroTik RouterOS 6.X
+OS CPE: cpe:/o:mikrotik:routeros:6
+OS details: MikroTik RouterOS 6.45.6
+
+Notes / recommended verification:
+- 443 shows "ssl/https?" — run nmap -sV -p 443 --script ssl-cert,ssl-enum-ciphers to identify cert and ciphers.
+- Router web config on 8080: verify if management interface exposed to LAN and restrict access; require strong admin password and latest RouterOS updates.
+
+------------------------------------------------------------
+
+Nmap scan report for 192.168.1.2
+Host is up (0.0032s latency).
+Not shown: 996 closed ports
+PORT     STATE SERVICE     VERSION
+22/tcp   open  ssh         OpenSSH 7.2p2 Ubuntu 4ubuntu2.10
+80/tcp   open  http        Apache httpd 2.4.29 ((Ubuntu))
+139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp  open  microsoft-ds Samba smbd 4.3.11-Ubuntu
+MAC Address: 08:00:27:3B:C2:5E (Oracle VirtualBox virtual NIC)
+OS details: Linux 4.15 (Ubuntu 18.04)
+
+Notes / recommended verification:
+- Samba versions reported (3.x/4.3.11) may be vulnerable; run smb-vuln* NSE scripts and check for SMBv1:
+    nmap -p 139,445 --script smb-protocols,smb-vuln* 192.168.1.2
+- Apache 2.4.29 and OpenSSH 7.2 are old for 2025; verify patch level and apply updates or backport security fixes.
+- If this is a VM (VirtualBox NIC), confirm whether it's production or lab; restrict network exposure accordingly.
+
+------------------------------------------------------------
+
+Nmap scan report for 192.168.1.3
+Host is up (0.0029s latency).
+Not shown: 993 filtered ports
+PORT      STATE SERVICE      VERSION
+135/tcp   open  msrpc        Microsoft Windows RPC
+139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+445/tcp   open  microsoft-ds Microsoft Windows 10 SMB
+3389/tcp  open  ms-wbt-server Microsoft Terminal Services
+5357/tcp  open  http         Microsoft HTTPAPI httpd 2.0
+MAC Address: 34:29:8F:89:B5:CC (Intel Corporate)
+OS details: Microsoft Windows 10 Pro (build 19045)
+
+Notes / recommended verification:
+- RDP (3389) exposed — ensure NLA is enabled, restrict access to management subnet or VPN, and enforce strong auth + MFA for remote access.
+- Run Windows-specific NSE / vulnerability checks and check SMB protocol version:
+    nmap -p 445 --script smb-protocols,smb-vuln* 192.168.1.3
+- Confirm Windows updates (build 19045) are current and apply pending security patches.
+
+------------------------------------------------------------
+
+Nmap scan report for 192.168.1.4
+Host is up (0.0050s latency).
+Not shown: 998 closed ports
+PORT     STATE SERVICE VERSION
+8080/tcp open  http    Apache Tomcat/Coyote JSP engine 1.1
+MAC Address: 40:B0:34:AB:CD:E1 (Dell)
+Device type: general purpose
+Running: Linux 5.X
+OS details: Linux 5.10 - 5.15 (Ubuntu 20.04)
+
+Notes / recommended verification:
+- "Tomcat/Coyote JSP engine 1.1" likely indicates connector version; identify exact Tomcat release using:
+    nmap -sV --version-all -p 8080 --script http-title,http-server-header 192.168.1.4
+- If application server is internet-facing, ensure latest Tomcat version and disable default/example apps; restrict admin interfaces.
+
+------------------------------------------------------------
+# Summary & immediate actions
+- Verify detected service versions with focused scans (-sV --version-all) and relevant NSE scripts (vuln, smb-vuln*, ssl-enum-ciphers).
+- Patch/update: Samba, Apache, OpenSSH, Tomcat, RouterOS, and Windows as applicable.
+- Reduce exposure: restrict management interfaces (router web UI, Tomcat, RDP) to admin subnets or VPN only.
+- Harden SMB/RDP: disable SMBv1, enforce SMB signing/secure dialects, enable NLA + MFA for RDP.
+- Re-scan after remediation and retain raw scan output for traceability.
+
+Nmap done: 256 IP addresses (4 hosts up) scanned in 21.32 seconds
